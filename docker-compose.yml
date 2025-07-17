@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  activemq:
+    image: rmohr/activemq
+    container_name: activemq
+    ports:
+      - "61616:61616"
+      - "8161:8161"
+    environment:
+      - ACTIVEMQ_ADMIN_LOGIN=admin
+      - ACTIVEMQ_ADMIN_PASSWORD=admin
+    networks:
+      - sipap-net   
+
+  sipap-app:
+    build: .
+    container_name: sipap-app
+    depends_on:
+      - activemq
+    environment:
+      - SPRING_ACTIVEMQ_BROKER_URL=tcp://activemq:61616
+      - SPRING_ACTIVEMQ_USER=admin
+      - SPRING_ACTIVEMQ_PASSWORD=admin
+    ports:
+      - "8080:8080"
+    networks:
+      - sipap-net
+
+networks:
+  sipap-net:
+    driver: bridge
