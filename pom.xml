@@ -26,6 +26,7 @@
     </properties>
 
     <dependencies>
+        <!-- Apache Camel y Spring Boot -->
         <dependency>
             <groupId>org.apache.camel.springboot</groupId>
             <artifactId>camel-spring-boot-starter</artifactId>
@@ -41,6 +42,8 @@
             <artifactId>camel-activemq-starter</artifactId>
             <version>${camel.version}</version>
         </dependency>
+
+        <!-- Spring Boot básico -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter</artifactId>
@@ -48,6 +51,16 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-activemq</artifactId>
+        </dependency>
+
+        <!-- Dependencias nuevas para soporte de JSON -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-json</artifactId>
         </dependency>
     </dependencies>
 
@@ -59,5 +72,6 @@
             </plugin>
         </plugins>
     </build>
+
 </project>
 

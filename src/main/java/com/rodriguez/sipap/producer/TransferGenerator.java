@@ -1,4 +1,3 @@
-
 package com.rodriguez.sipap.producer;
 
 import org.apache.camel.ProducerTemplate;
@@ -6,6 +5,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.util.Random;
+import java.util.UUID;
 
 @Component
 public class TransferGenerator {
@@ -29,10 +29,16 @@ public class TransferGenerator {
         int cuenta = 100000 + random.nextInt(900000);
         int monto = 1000 + random.nextInt(4001);
 
-        String json = String.format("{\"cuenta\": \"%d\", \"monto\": %d, \"banco_origen\": \"%s\", \"banco_destino\": \"%s\"}",
-                cuenta, monto, bancoOrigen, bancoDestino);
+        // Se agrega un ID único para que los consumidores puedan aplicar Idempotent Receiver
+        String id = UUID.randomUUID().toString();
+
+        String json = String.format(
+            "{\"id\": \"%s\", \"cuenta\": \"%d\", \"monto\": %d, \"banco_origen\": \"%s\", \"banco_destino\": \"%s\"}",
+            id, cuenta, monto, bancoOrigen, bancoDestino
+        );
 
         String queue = "rodriguez-" + bancoDestino + "-IN";
         producerTemplate.sendBody("activemq:queue:" + queue, json);
     }
 }
+

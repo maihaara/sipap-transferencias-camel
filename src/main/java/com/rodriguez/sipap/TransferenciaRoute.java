@@ -1,5 +1,6 @@
 package com.rodriguez.sipap;
 
+import com.rodriguez.sipap.processor.ValidadorProcessor;
 import org.apache.camel.builder.RouteBuilder;
 import org.springframework.stereotype.Component;
 
@@ -14,7 +15,7 @@ public class TransferenciaRoute extends RouteBuilder {
     @Override
     public void configure() {
 
-        //Timer que genera una transferencia cada 5 segundos
+        // Generador de transferencias (cada 5 segundos)
         from("timer:generador?period=5000")
             .process(exchange -> {
                 String cuenta = String.valueOf(1000 + random.nextInt(4000));
@@ -23,26 +24,34 @@ public class TransferenciaRoute extends RouteBuilder {
                 String bancoDestino;
                 do {
                     bancoDestino = bancos[random.nextInt(bancos.length)];
-                } while (bancoDestino.equals(bancoOrigen)); // evitar mismo banco
+                } while (bancoDestino.equals(bancoOrigen));
 
                 Transferencia t = new Transferencia(cuenta, monto, bancoOrigen, bancoDestino);
-                exchange.getIn().setBody(t.toString()); // JSON como String
-
-                // Ruta dinámica de la cola
+                exchange.getIn().setBody(t.toString());
+                exchange.getIn().setHeader("nombreCola", "rodriguez-" + bancoDestino + "-IN");
                 exchange.getIn().setHeader("bancoDestino", bancoDestino);
             })
-            .toD("activemq:queue:rodriguez-${header.bancoDestino}-IN");
+            .log("Generando transferencia y enviando a cola de validación")
+            .to("activemq:queue:rodriguez-VALIDAR-IN");
+
+        // Proceso de validación antes de pasar al banco destino
+        from("activemq:queue:rodriguez-VALIDAR-IN")
+            .routeId("validacion-transferencia")
+            .log("Validando transferencia: ${body}")
+            .process(new ValidadorProcessor())
+            .toD("activemq:queue:${header.nombreCola}");
 
         // Consumidor ITAU
         from("activemq:queue:rodriguez-ITAU-IN")
-            .log("🟦 ITAU recibió: ${body}");
+            .log("ITAU recibió: ${body}");
 
         // Consumidor ATLAS
         from("activemq:queue:rodriguez-ATLAS-IN")
-            .log("🟥 ATLAS recibió: ${body}");
+            .log("ATLAS recibió: ${body}");
 
-        // Puedes agregar otro consumidor si querés FAMILIAR
-         from("activemq:queue:rodriguez-FAMILIAR-IN")
-            .log("🟩 FAMILIAR recibió: ${body}");
+        // Consumidor FAMILIAR
+        from("activemq:queue:rodriguez-FAMILIAR-IN")
+            .log("FAMILIAR recibió: ${body}");
     }
 }
+

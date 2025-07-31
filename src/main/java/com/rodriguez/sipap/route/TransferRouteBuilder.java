@@ -1,4 +1,3 @@
-
 package com.rodriguez.sipap.route;
 
 import org.apache.camel.builder.RouteBuilder;

@@ -1,5 +1,6 @@
-com\rodriguez\sipap\Transferencia.class
-com\rodriguez\sipap\producer\TransferGenerator.class
+com\rodriguez\sipap\processor\ValidadorProcessor.class
 com\rodriguez\sipap\TransferenciaRoute.class
 com\rodriguez\sipap\route\TransferRouteBuilder.class
+com\rodriguez\sipap\Transferencia.class
+com\rodriguez\sipap\producer\TransferGenerator.class
 com\rodriguez\sipap\SipapApplication.class

@@ -15,17 +15,37 @@ public class Transferencia {
         this.bancoDestino = bancoDestino;
     }
 
-    public String getCuenta() { return cuenta; }
-    public void setCuenta(String cuenta) { this.cuenta = cuenta; }
+    public String getCuenta() {
+        return cuenta;
+    }
 
-    public int getMonto() { return monto; }
-    public void setMonto(int monto) { this.monto = monto; }
+    public void setCuenta(String cuenta) {
+        this.cuenta = cuenta;
+    }
 
-    public String getBancoOrigen() { return bancoOrigen; }
-    public void setBancoOrigen(String bancoOrigen) { this.bancoOrigen = bancoOrigen; }
+    public int getMonto() {
+        return monto;
+    }
 
-    public String getBancoDestino() { return bancoDestino; }
-    public void setBancoDestino(String bancoDestino) { this.bancoDestino = bancoDestino; }
+    public void setMonto(int monto) {
+        this.monto = monto;
+    }
+
+    public String getBancoOrigen() {
+        return bancoOrigen;
+    }
+
+    public void setBancoOrigen(String bancoOrigen) {
+        this.bancoOrigen = bancoOrigen;
+    }
+
+    public String getBancoDestino() {
+        return bancoDestino;
+    }
+
+    public void setBancoDestino(String bancoDestino) {
+        this.bancoDestino = bancoDestino;
+    }
 
     @Override
     public String toString() {
@@ -35,5 +55,13 @@ public class Transferencia {
                 "\"banco_origen\":\"" + bancoOrigen + "\"," +
                 "\"banco_destino\":\"" + bancoDestino + "\"" +
                 "}";
+    }
+
+    //validar los campos
+    public boolean isValid() {
+        return cuenta != null && !cuenta.isEmpty() &&
+               bancoOrigen != null && !bancoOrigen.isEmpty() &&
+               bancoDestino != null && !bancoDestino.isEmpty() &&
+               monto > 0;
     }
 }

@@ -13,4 +13,3 @@ public class SipapApplication {
         Thread.currentThread().join();
     }
 }
-
